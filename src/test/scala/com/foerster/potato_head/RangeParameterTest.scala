@@ -4,16 +4,16 @@ import com.foerster.potato_head.variability.RangeParameter
 import org.specs2.mutable._
 
 /**
- * Created by foerster on 27/01/15.
+ * Created by foerster on 27/01/15. Ninja
  */
 class RangeParameterTest extends SpecificationWithJUnit {
 
   "Range Parameter Specifications ".title
 
   case class Test(value: Int) extends RangeParameter {
-    override def upperBound: Int = 10
+    override def upperBound: Int = 100
 
-    override def lowerBound: Int = 100
+    override def lowerBound: Int = 10
   }
 
 
