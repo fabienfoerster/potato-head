@@ -5,14 +5,16 @@ package com.foerster.potato_head.variability
  */
 trait Parameter[T] {
   val value : T
-  def check : Boolean
+  def check(implicit f : T => Ordered[T]) :Boolean
 }
 
-trait RangeParameter  extends Parameter[Int]{
-  def upperBound: Int
-  def lowerBound: Int
 
-  override def check :Boolean = value <= upperBound && value >= lowerBound
+
+trait RangeParameter[T]  extends Parameter[T]{
+  def upperBound: T
+  def lowerBound: T
+
+  override def check(implicit f : T => Ordered[T]) :Boolean = value <= upperBound && value >= lowerBound
 }
 
 
