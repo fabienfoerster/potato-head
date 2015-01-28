@@ -10,7 +10,7 @@ class RangeParameterTest extends SpecificationWithJUnit {
 
   "Range Parameter Specifications ".title
 
-  case class Test(value: Int) extends RangeParameter[Int] {
+  case class Test(value: Option[Int]) extends RangeParameter[Int] {
     override def upperBound: Int = 100
 
     override def lowerBound: Int = 10
@@ -19,9 +19,9 @@ class RangeParameterTest extends SpecificationWithJUnit {
 
 
   "A RangeParameter" should {
-    "be false if value is greater than upper bound" in { Test(102).check must_== false}
-    "be false if value is smaller than lower bound" in { Test(9).check must_== false}
-    "be true if value is smaller than upper bound and greater than lower bound" in { Test(42).check must_== true}
+    "be false if value is greater than upper bound" in { Test(Some(102)).check must_== false}
+    "be false if value is smaller than lower bound" in { Test(Some(9)).check must_== false}
+    "be true if value is smaller than upper bound and greater than lower bound" in { Test(Some(42)).check must_== true}
   }
 
 }
