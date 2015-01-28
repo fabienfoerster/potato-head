@@ -18,6 +18,13 @@ trait RangeParameter[T]  extends Parameter[T]{
   }
 }
 
+trait MandatoryParameter[T] extends  Parameter[T] {
+  override def check(implicit f: (T) => Ordered[T]): Boolean = value match {
+    case Some(x) => true
+    case None => false
+  }
+}
+
 
 
 
