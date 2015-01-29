@@ -11,9 +11,8 @@ class RangeParameterTest extends SpecificationWithJUnit {
   "Range Parameter Specifications ".title
 
   case class Test(value: Option[Int]) extends RangeParameter[Int] {
-    override def upperBound: Int = 100
-
-    override def lowerBound: Int = 10
+    override val upperBound: Int = 100
+    override val lowerBound: Int = 10
   }
 
 

@@ -9,8 +9,8 @@ trait Parameter[T] {
 }
 
 trait RangeParameter[T]  extends Parameter[T]{
-  def upperBound: T
-  def lowerBound: T
+  val upperBound: T
+  val lowerBound: T
 
   override def check(implicit f : T => Ordered[T]) :Boolean = value match {
     case Some(x) if x <= upperBound && x >= lowerBound => true
@@ -25,6 +25,8 @@ trait MandatoryParameter[T] extends  Parameter[T] {
     case None => false
   }
 }
+
+
 
 
 
