@@ -9,17 +9,17 @@ trait Parameter[T] {
   def check :Boolean = true
 }
 
-trait RangeParameter[T]  extends Parameter[T]{
+abstract class RangeParameter[T <% Ordered[T]]  extends Parameter[T]{
   val upperBound: T
   val lowerBound: T
 
-  def rangeCheck(implicit ordering: Ordering[T]) :Boolean = super.check && { value match {
+  private def rangeCheck(implicit ordering: Ordering[T]) :Boolean = super.check && { value match {
    case Some(x) if ordering.lteq(x,upperBound) && ordering.gteq(x,lowerBound) => true
    case None => true
    case _ => false
  } }
 
-  override def check: Boolean = true
+  override def check: Boolean = rangeCheck
 }
 
 trait MandatoryParameter[T] extends  Parameter[T] {

@@ -22,10 +22,10 @@ class RangeParameterTest extends SpecificationWithJUnit {
 
 
   "A RangeParameter" should {
-    " be true if value is not set" in { TestRange(None).rangeCheck must_== true}
-    "be false if value is greater than upper bound" in { TestRange(Some(102)).rangeCheck must_== false}
-    "be false if value is smaller than lower bound" in { TestRange(Some(9)).rangeCheck must_== false}
-    "be true if value is smaller than upper bound and greater than lower bound" in { TestRange(Some(42)).rangeCheck must_== true}
+    " be true if value is not set" in { TestRange(None).check must_== true}
+    "be false if value is greater than upper bound" in { TestRange(Some(102)).check must_== false}
+    "be false if value is smaller than lower bound" in { TestRange(Some(9)).check must_== false}
+    "be true if value is smaller than upper bound and greater than lower bound" in { TestRange(Some(42)).check must_== true}
   }
 
 }

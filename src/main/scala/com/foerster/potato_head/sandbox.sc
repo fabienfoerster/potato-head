@@ -15,7 +15,7 @@ object AddHeight {
 
 
 
-val test = new AddHeight(8)
+val test = new AddHeight(MaxParam(None))
 test.max.check
 
 class Ops[T : Numeric] {
