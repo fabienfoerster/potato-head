@@ -13,13 +13,13 @@ trait RangeParameter[T]  extends Parameter[T]{
   val upperBound: T
   val lowerBound: T
 
-  def rangeCheck(implicit f : T => Ordered[T]) :Boolean = super.check && { value match {
-    case Some(x) if x <= upperBound && x >= lowerBound => true
-    case None => true
-    case _ => false
-  } }
+  def rangeCheck(implicit ordering: Ordering[T]) :Boolean = super.check && { value match {
+   case Some(x) if ordering.lteq(x,upperBound) && ordering.gteq(x,lowerBound) => true
+   case None => true
+   case _ => false
+ } }
 
-  override def check: Boolean = super.check
+  override def check: Boolean = true
 }
 
 trait MandatoryParameter[T] extends  Parameter[T] {

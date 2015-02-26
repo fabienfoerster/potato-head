@@ -3,7 +3,6 @@ package com.foerster.potato_head
 import com.foerster.potato_head.variability.RangeParameter
 import org.specs2.mutable._
 
-import scala.runtime.RichInt
 
 
 case class TestRange(value: Option[Int]) extends RangeParameter[Int] {
