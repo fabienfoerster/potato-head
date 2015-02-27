@@ -29,7 +29,13 @@ trait MandatoryParameter[T] extends  Parameter[T] {
   } }
 }
 
-
+trait RelationParameter[T] extends Parameter[T] {
+  val otherParam: Parameter[T]
+  
+  def relation(first:Parameter[T],second:Parameter[T] ) : Boolean
+  
+  override def check: Boolean = super.check && relation(this,otherParam)
+}
 
 
 
