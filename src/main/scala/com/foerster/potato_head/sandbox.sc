@@ -1,5 +1,7 @@
-import com.foerster.potato_head.variability.{MandatoryParameter, RangeParameter}
+
 import AddHeight._
+import com.foerster.potato_head.variability._
+
 class AddHeight(val max: MaxParam) {
 }
 
@@ -37,3 +39,16 @@ case class Panda(value: Option[Truc]) extends MandatoryParameter[Truc]
 
 val panda = Panda(Some(Truc("buffy")))
 panda.check
+
+case class Salope(value: Option[Int],requiredParams: Option[Seq[Parameter[Any]]]) extends OrderedParameter[Int] {
+
+}
+
+val order1 = Salope(Some(12),None)
+val order3 = Salope(Some(14),Some(Seq(order1)))
+val order2 = Salope(Some(5),Some(Seq(order1)))
+
+
+val testSeq: ParameterSeq = Seq(Panda(Some(Truc("fabien"))),order2,order3)
+testSeq.check
+val groot : Seq[Parameter[Any]] = testSeq
