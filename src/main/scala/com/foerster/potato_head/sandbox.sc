@@ -17,7 +17,7 @@ object AddHeight {
 
 
 
-val test = new AddHeight(MaxParam(None))
+val test = new AddHeight(12)
 test.max.check
 
 class Ops[T : Numeric] {
@@ -40,15 +40,17 @@ case class Panda(value: Option[Truc]) extends MandatoryParameter[Truc]
 val panda = Panda(Some(Truc("buffy")))
 panda.check
 
-case class Salope(value: Option[Int],requiredParams: Option[Seq[Parameter[Any]]]) extends OrderedParameter[Int] {
+case class OrderedParam(value: Option[Int],requiredParams: Option[Seq[Parameter[Any]]]) extends OrderedParameter[Int] {
 
 }
 
-val order1 = Salope(Some(12),None)
-val order3 = Salope(Some(14),Some(Seq(order1)))
-val order2 = Salope(Some(5),Some(Seq(order1)))
+case class RelouParam(value: Option[Int], notWantedParameter: Option[Seq[Parameter[Any]]]) extends RelouParameter[Int]
 
+val order1 = OrderedParam(Some(12),None)
+val order3 = OrderedParam(Some(14),Some(Seq(order1)))
+val order2 = OrderedParam(Some(5),Some(Seq(order1)))
+val relou = RelouParam(Some(5),Some(Seq(order3)))
 
-val testSeq: ParameterSeq = Seq(Panda(Some(Truc("fabien"))),order2,order3)
+val testSeq: ParameterSeq = Seq(MaxParam(Some(12)),order1,order2,relou)
 testSeq.check
-val groot : Seq[Parameter[Any]] = testSeq
+val retrieveSeq : Seq[Parameter[Any]] = testSeq

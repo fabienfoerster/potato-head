@@ -13,13 +13,13 @@ abstract class RangeParameter[T <% Ordered[T]]  extends Parameter[T]{
   val upperBound: T
   val lowerBound: T
 
-  private def rangeCheck(implicit ordering: Ordering[T]) :Boolean = super.check && { value match {
+  private def rangeCheck(implicit ordering: Ordering[T]) :Boolean = { value match {
    case Some(x) if ordering.lteq(x,upperBound) && ordering.gteq(x,lowerBound) => true
    case None => true
    case _ => false
  } }
 
-  override def check: Boolean = rangeCheck
+  override def check: Boolean = super.check && rangeCheck
 }
 
 trait MandatoryParameter[T] extends  Parameter[T] {
@@ -44,11 +44,27 @@ trait OrderedParameter[T] extends Parameter[T] {
   override  def check: Boolean = super.check
 }
 
+trait RelouParameter[T] extends Parameter[T] {
+  val notWantedParameter : Option[Seq[Parameter[Any]]]
+  
+  override def check: Boolean = super.check
+  
+}
+
 class ParameterSeq(val params:Seq[Parameter[Any]]) {
   
   private def checkCorrectOrder(orderedParams : Seq[OrderedParameter[Any]]): Boolean = {
     {
-      for (param <- orderedParams; listRequire <- param.requiredParams.toList; required <- listRequire if params.indexOf(param) < params.indexOf(required) || params.indexOf(required) == -1) yield {
+      for (param <- orderedParams; listRequire <- param.requiredParams.toList; required <- listRequire if params.indexOf(param) < params.indexOf(required) 
+        || params.indexOf(required) == -1) yield {
+        false
+      }
+    }.foldLeft(true)((p1,p2) => p1 && p2)
+  }
+  
+  private def checkRelouParameter(relouParameters: Seq[RelouParameter[Any]]): Boolean = {
+    {
+      for (param <- relouParameters; listRelou <- param.notWantedParameter.toList; relou: Parameter[Any] <- listRelou if params.indexOf(relou) != -1) yield {
         false
       }
     }.foldLeft(true)((p1,p2) => p1 && p2)
@@ -56,6 +72,7 @@ class ParameterSeq(val params:Seq[Parameter[Any]]) {
   
   def check: Boolean = {
     checkCorrectOrder(this.params.filter(p => p.isInstanceOf[OrderedParameter[Any]]).map(p => p.asInstanceOf[OrderedParameter[Any]])) &&
+    checkRelouParameter(this.params.filter(p => p.isInstanceOf[RelouParameter[Any]]).map(p => p.asInstanceOf[RelouParameter[Any]])) &&
     params.map(p => p.check).foldLeft(true)((check1:Boolean,check2:Boolean)=> check1 && check2)
   }
 
