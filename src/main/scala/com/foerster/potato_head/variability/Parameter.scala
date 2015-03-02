@@ -9,6 +9,17 @@ trait Parameter[+T] {
   def check :Boolean = true
 }
 
+object Parameter {
+  def defaultValue[U]: U = { class Default[U] {var default: U = _ }; new Default[U].default }
+  
+  import scala.language.implicitConversions
+  implicit def paramToValue[U](param: Parameter[U]): U = param.value match {
+    case Some(x) => x
+    case None => defaultValue[U]
+  }
+  
+}
+
 abstract class RangeParameter[T <% Ordered[T]]  extends Parameter[T]{
   val upperBound: T
   val lowerBound: T

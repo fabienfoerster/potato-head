@@ -54,3 +54,5 @@ val relou = RelouParam(Some(5),Some(Seq(order3)))
 val testSeq: ParameterSeq = Seq(MaxParam(Some(12)),order1,order2,relou)
 testSeq.check
 val retrieveSeq : Seq[Parameter[Any]] = testSeq
+
+val retriveValue : Int = order1
