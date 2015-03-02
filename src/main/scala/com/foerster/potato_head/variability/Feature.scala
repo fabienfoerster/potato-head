@@ -50,32 +50,16 @@ class FeaturesSequence(val features:Seq[Feature]) {
     
   }
 
-  private def checkOrderedFeatures(orderedFeatures : Seq[OrderedFeature]): Boolean = {
-    /*{
-      for (param <- orderedParams; listRequire <- param.requiredParams.toList; required <- listRequire if features.indexOf(param) < features.indexOf(required)
-        || features.indexOf(required) == -1) yield {
-        false
-      }
-    }.foldLeft(true)((p1,p2) => p1 && p2)*/
-    orderedFeatures match {
+  private def checkOrderedFeatures(orderedFeatures : Seq[OrderedFeature]): Boolean = orderedFeatures match {
       case f :: rest => precedence(f,f.requiredFeatures.getOrElse(List())) && checkOrderedFeatures(rest)
       case Nil => true
     }
-  }
 
-  private def checkExclusiveFeatures(exclusiveFeatures: Seq[ExclusiveFeature]): Boolean = {
-   /* {
-      for (param <- relouParameters; listRelou <- param.notWantedParameter.toList; relou: Parameter[Any] <- listRelou if features.indexOf(relou) != -1) yield {
-        false
-      }
-    }.foldLeft(true)((p1,p2) => p1 && p2)*/
-    exclusiveFeatures match {
+  private def checkExclusiveFeatures(exclusiveFeatures: Seq[ExclusiveFeature]): Boolean =  exclusiveFeatures match {
       case f :: rest => noPresence(f.notWantedParameter.getOrElse(List())) && checkExclusiveFeatures(rest)
       case Nil => true
       
     }
-    
-  }
 
   def check: Boolean = {
     checkOrderedFeatures(this.features.filter(p => p.isInstanceOf[OrderedFeature]).map(p => p.asInstanceOf[OrderedFeature])) &&
