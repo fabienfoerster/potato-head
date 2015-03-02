@@ -1,4 +1,4 @@
-package com.foerster.potato_head
+package com.foerster.potato_head.parameter
 
 import com.foerster.potato_head.variability.RangeParameter
 import org.specs2.mutable._

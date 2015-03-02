@@ -4,7 +4,7 @@ package com.foerster.potato_head.variability
  * Created by foerster on 27/01/15. Ninja
  */
 
-trait Parameter[+T] {
+abstract class Parameter[+T] {
   val value : Option[T]
   def check :Boolean = true
 }
@@ -48,55 +48,7 @@ trait RelationParameter[T] extends Parameter[T] {
   override def check: Boolean = super.check && relation(this,otherParam)
 }
 
-trait OrderedParameter[T] extends Parameter[T] {
-  // params who must be present before in a ParamSeq
-  val requiredParams : Option[Seq[Parameter[Any]]]
 
-  override  def check: Boolean = super.check
-}
-
-trait RelouParameter[T] extends Parameter[T] {
-  val notWantedParameter : Option[Seq[Parameter[Any]]]
-  
-  override def check: Boolean = super.check
-  
-}
-
-class ParameterSeq(val params:Seq[Parameter[Any]]) {
-  
-  private def checkCorrectOrder(orderedParams : Seq[OrderedParameter[Any]]): Boolean = {
-    {
-      for (param <- orderedParams; listRequire <- param.requiredParams.toList; required <- listRequire if params.indexOf(param) < params.indexOf(required) 
-        || params.indexOf(required) == -1) yield {
-        false
-      }
-    }.foldLeft(true)((p1,p2) => p1 && p2)
-  }
-  
-  private def checkRelouParameter(relouParameters: Seq[RelouParameter[Any]]): Boolean = {
-    {
-      for (param <- relouParameters; listRelou <- param.notWantedParameter.toList; relou: Parameter[Any] <- listRelou if params.indexOf(relou) != -1) yield {
-        false
-      }
-    }.foldLeft(true)((p1,p2) => p1 && p2)
-  }
-  
-  def check: Boolean = {
-    checkCorrectOrder(this.params.filter(p => p.isInstanceOf[OrderedParameter[Any]]).map(p => p.asInstanceOf[OrderedParameter[Any]])) &&
-    checkRelouParameter(this.params.filter(p => p.isInstanceOf[RelouParameter[Any]]).map(p => p.asInstanceOf[RelouParameter[Any]])) &&
-    params.map(p => p.check).foldLeft(true)((check1:Boolean,check2:Boolean)=> check1 && check2)
-  }
-
-}
-
-object ParameterSeq {
-  def apply(seq: Seq[Parameter[Any]]): ParameterSeq = new ParameterSeq(seq)
-
-  import scala.language.implicitConversions
-  implicit def seqToParamSeq(s : Seq[Parameter[Any]]): ParameterSeq = ParameterSeq(s)
-  implicit def paramSeqToSeq(paramSeq: ParameterSeq): Seq[Parameter[Any]] = paramSeq.params
-  
-}
 
 
 
