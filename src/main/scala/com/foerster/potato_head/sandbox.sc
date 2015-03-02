@@ -20,15 +20,6 @@ object AddHeight {
 val test = new AddHeight(12)
 test.max.check
 
-class Ops[T : Numeric] {
-  import Ordering.Implicits._
-  import Numeric.Implicits._
-     def add(a: T, b: T) = a + b
-     def gt(a: T, b: T) = a > b
-   }
-
-val ops = new Ops[Int]
-ops.gt(10,100)
 
 case class Truc(name : String)
 
@@ -37,9 +28,10 @@ val q = Truc("adrien")
 
 case class Panda(value: Option[Truc]) extends MandatoryParameter[Truc]
 
-val panda = Panda(Some(Truc("buffy")))
+val panda = Panda(Some(p))
 panda.check
 
+/*
 case class OrderedParam(value: Option[Int],requiredParams: Option[Seq[Parameter[Any]]]) extends OrderedParameter[Int] {
 
 }
@@ -55,4 +47,4 @@ val testSeq: ParameterSeq = Seq(MaxParam(Some(12)),order1,order2,relou)
 testSeq.check
 val retrieveSeq : Seq[Parameter[Any]] = testSeq
 
-val retriveValue : Int = order1
+val retriveValue : Int = order1*/
