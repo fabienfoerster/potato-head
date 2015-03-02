@@ -13,7 +13,7 @@ abstract class Feature {
     case None => true
   }
   
-  def check(params : Seq[Parameter[Any]]): Boolean = params match {
+  private def check(params : Seq[Parameter[Any]]): Boolean = params match {
     case p :: rest if p.check => check(rest)
     case Nil => true
     case _ => false    
@@ -80,7 +80,7 @@ class FeaturesSequence(val features:Seq[Feature]) {
   def check: Boolean = {
     checkOrderedFeatures(this.features.filter(p => p.isInstanceOf[OrderedFeature]).map(p => p.asInstanceOf[OrderedFeature])) &&
       checkExclusiveFeatures(this.features.filter(p => p.isInstanceOf[ExclusiveFeature]).map(p => p.asInstanceOf[ExclusiveFeature])) &&
-      features.map(p => p.check).foldLeft(true)((check1:Boolean,check2:Boolean)=> check1 && check2)
+      features.forall(f => f.check)
   }
 
 }
