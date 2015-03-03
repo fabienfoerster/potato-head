@@ -32,7 +32,7 @@ trait ExclusiveFeature extends Feature {
 
 }
 
-trait MandatoryFeature[T] extends Feature
+trait MandatoryFeature extends Feature
 
 class FeaturesSequence(val features:Seq[Feature]) {
   
