@@ -1,10 +1,12 @@
 package com.foerster.potato_head.variability
 
+import com.typesafe.scalalogging.slf4j.LazyLogging
+
 /**
  * Created by foerster on 27/01/15. Ninja
  */
 
-abstract class Parameter[+T] {
+abstract class Parameter[+T] extends LazyLogging{
   val value : Option[T]
   def check :Boolean = true
 }
@@ -27,7 +29,7 @@ abstract class RangeParameter[T <% Ordered[T]]  extends Parameter[T]{
   private def rangeCheck(implicit ordering: Ordering[T]) :Boolean = { value match {
    case Some(x) if ordering.lteq(x,upperBound) && ordering.gteq(x,lowerBound) => true
    case None => true
-   case _ => false
+   case _ => logger.info("Value is outside the range ["+lowerBound+","+upperBound+"] in RangeParameter");false
  } }
 
   override def check: Boolean = super.check && rangeCheck
@@ -36,7 +38,7 @@ abstract class RangeParameter[T <% Ordered[T]]  extends Parameter[T]{
 trait MandatoryParameter[T] extends  Parameter[T] {
   override def check: Boolean = super.check && { value match {
     case Some(x) => true
-    case None => false
+    case None =>  logger.info("MandatoryParameter but not value set"); false
   } }
 }
 
@@ -45,7 +47,10 @@ trait RelationParameter[T] extends Parameter[T] {
   
   def relation(first:Parameter[T],second:Parameter[T] ) : Boolean
   
-  override def check: Boolean = super.check && relation(this,otherParam)
+  override def check: Boolean = super.check && {
+    if (relation(this, otherParam)) true
+    else { logger.info("Relation in RelationParameter is not satisfied"); false }
+  }
 }
 
 
